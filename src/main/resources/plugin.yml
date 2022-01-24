@@ -1,0 +1,9 @@
+name: SpeedBridgeUpdater
+version: '${project.version}'
+main: io.tofpu.speedbridgeupdater.SpeedBridgeUpdaterPlugin
+authors: [ Tofpu ]
+commands:
+  sbupdate:
+    description: updates the speedbridge plugin for you
+    aliases:
+      - sbu

@@ -4,6 +4,7 @@ import io.tofpu.dynamicclass.DynamicClass;
 import io.tofpu.speedbridgeupdater.executor.BukkitExecutor;
 import io.tofpu.speedbridgeupdater.ptero.PterodactylApp;
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.Configuration;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 
@@ -17,10 +18,10 @@ public final class SpeedBridgeUpdater {
         this.plugin = plugin;
     }
 
-    public void load() {
+    public void load(final String serviceMode, final String panelUrl, final String apiKey, final String serverId) {
         BukkitExecutor.INSTANCE.submit(() -> {
             try {
-                this.pterodactylApp = new PterodactylApp();
+                this.pterodactylApp = new PterodactylApp(panelUrl, apiKey, serverId);
             } catch (IOException e) {
                 e.printStackTrace();
             }

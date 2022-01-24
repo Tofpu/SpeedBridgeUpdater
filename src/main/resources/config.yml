@@ -1,0 +1,7 @@
+settings:
+  service:
+    # it only supports PTERODACTYL at the moment
+    mode: PTERODACTYL
+    panel_url: PUT_PANEL_URL_HERE
+    api_key: PUT_API_KEY_HERE
+    server_id: PUT_SERVER_ID_HERE

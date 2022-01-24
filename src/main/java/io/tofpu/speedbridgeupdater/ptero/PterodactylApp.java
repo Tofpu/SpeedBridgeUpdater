@@ -20,8 +20,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 public final class PterodactylApp {
-    private static final String API_KEY = "***REMOVED***";
-    private static final String SERVER_TARGET = "***REMOVED***";
+    private static final String TEST_LINK = "http://localhost:3000/favicon.zip";
     private static final String DOWNLOAD_LINK = "https://speedbridge.tofpu.me/download";
 
     private final @NotNull PteroClient pteroClient;
@@ -33,10 +32,9 @@ public final class PterodactylApp {
 
     private boolean sentRequest = false;
 
-    public PterodactylApp() throws IOException {
-        this.pteroClient = PteroBuilder.createClient("***REMOVED***", API_KEY);
-        this.clientServer = pteroClient.retrieveServerByIdentifier(SERVER_TARGET)
-                .execute();
+    public PterodactylApp(final String panelUrl, final String apiKey, final String serverId) throws IOException {
+        this.pteroClient = PteroBuilder.createClient(panelUrl, apiKey);
+        this.clientServer = pteroClient.retrieveServerByIdentifier(serverId).execute();
 
         this.pluginsDirectory = this.clientServer.retrieveDirectory("plugins").execute();
 
@@ -52,7 +50,8 @@ public final class PterodactylApp {
     public void sendUpdateRequest(final CommandSender sender) {
         this.sentRequest = true;
         BukkitExecutor.INSTANCE.execute(() -> {
-            final File downloadFile = FileDownloader.downloadFrom("http://localhost:3000/favicon" + ".zip", "favicon" + ".zip");
+            final File downloadFile = FileDownloader.downloadFrom(DOWNLOAD_LINK,
+                    "SpeedBridge-2.jar");
             try {
                 downloadFile.createNewFile();
             } catch (IOException e) {

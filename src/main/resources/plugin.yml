@@ -1,6 +1,6 @@
 name: SpeedBridgeUpdater
 version: '${project.version}'
-main: io.tofpu.speedbridgeupdater.SpeedBridgeUpdaterPlugin
+main: io.tofpu.speedbridgeupdater.plugin.SpeedBridgeUpdaterPlugin
 authors: [ Tofpu ]
 commands:
   sbupdate:

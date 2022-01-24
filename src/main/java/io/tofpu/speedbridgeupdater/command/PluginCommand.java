@@ -1,7 +1,7 @@
 package io.tofpu.speedbridgeupdater.command;
 
 import io.tofpu.dynamicclass.meta.AutoRegister;
-import io.tofpu.speedbridgeupdater.PterodactylApp;
+import io.tofpu.speedbridgeupdater.ptero.PterodactylApp;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;

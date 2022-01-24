@@ -2,28 +2,31 @@ package io.tofpu.speedbridgeupdater;
 
 import io.tofpu.dynamicclass.DynamicClass;
 import io.tofpu.speedbridgeupdater.executor.BukkitExecutor;
+import io.tofpu.speedbridgeupdater.ptero.PterodactylApp;
 import org.bukkit.Bukkit;
-import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.plugin.Plugin;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
-import java.util.concurrent.CompletableFuture;
 
-public final class SpeedBridgeUpdaterPlugin extends JavaPlugin {
+public final class SpeedBridgeUpdater {
+    private final @NotNull Plugin plugin;
     private PterodactylApp pterodactylApp;
 
-    @Override
-    public void onEnable() {
-        // Plugin startup logic
+    public SpeedBridgeUpdater(final @NotNull Plugin plugin) {
+        this.plugin = plugin;
+    }
 
-        CompletableFuture.runAsync(() -> {
+    public void load() {
+        BukkitExecutor.INSTANCE.submit(() -> {
             try {
                 this.pterodactylApp = new PterodactylApp();
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }, BukkitExecutor.INSTANCE).thenRun(() -> {
-            Bukkit.getScheduler().callSyncMethod(this, () -> {
-                DynamicClass.addParameters(this);
+        }).thenRun(() -> {
+            Bukkit.getScheduler().callSyncMethod(plugin, () -> {
+                DynamicClass.addParameters(plugin);
                 DynamicClass.addParameters(pterodactylApp);
                 try {
                     DynamicClass.alternativeScan(getClass().getClassLoader(), "io.tofpu" + ".speedbridgeupdater");
@@ -33,5 +36,9 @@ public final class SpeedBridgeUpdaterPlugin extends JavaPlugin {
                 return null;
             });
         });
+    }
+
+    public void disable() {
+        BukkitExecutor.INSTANCE.shutdown();
     }
 }

@@ -51,7 +51,7 @@ public final class PterodactylApp {
         this.sentRequest = true;
         BukkitExecutor.INSTANCE.execute(() -> {
             final File downloadFile = FileDownloader.downloadFrom(DOWNLOAD_LINK,
-                    "SpeedBridge-2.jar");
+                    "SpeedBridge-2.zip");
             try {
                 downloadFile.createNewFile();
             } catch (IOException e) {

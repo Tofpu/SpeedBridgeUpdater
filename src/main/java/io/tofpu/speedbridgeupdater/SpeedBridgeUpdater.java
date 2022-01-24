@@ -10,6 +10,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
+import java.util.concurrent.ExecutionException;
 
 public final class SpeedBridgeUpdater {
     private final @NotNull JavaPlugin plugin;
@@ -29,24 +30,25 @@ public final class SpeedBridgeUpdater {
             }
         }
 
-        BukkitExecutor.INSTANCE.submit(() -> {
-            try {
-                this.pterodactylApp = new PterodactylApp(panelUrl, apiKey, serverId);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }).thenRun(() -> {
-            Bukkit.getScheduler().callSyncMethod(plugin, () -> {
-                DynamicClass.addParameters(plugin);
-                DynamicClass.addParameters(pterodactylApp);
+        try {
+            BukkitExecutor.INSTANCE.submit(() -> {
                 try {
-                    DynamicClass.alternativeScan(getClass().getClassLoader(), "io.tofpu" + ".speedbridgeupdater");
+                    this.pterodactylApp = new PterodactylApp(panelUrl, apiKey, serverId);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                return null;
-            });
-        });
+            }).get();
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+
+        DynamicClass.addParameters(plugin);
+        DynamicClass.addParameters(pterodactylApp);
+        try {
+            DynamicClass.alternativeScan(getClass().getClassLoader(), "io.tofpu" + ".speedbridgeupdater");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void disable() {

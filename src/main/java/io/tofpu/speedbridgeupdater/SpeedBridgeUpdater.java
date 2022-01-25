@@ -1,49 +1,38 @@
 package io.tofpu.speedbridgeupdater;
 
 import io.tofpu.dynamicclass.DynamicClass;
-import io.tofpu.speedbridgeupdater.exception.InvalidPanelURL;
+import io.tofpu.speedbridgeupdater.domain.UpdateServiceController;
+import io.tofpu.speedbridgeupdater.domain.type.ServiceModeType;
+import io.tofpu.speedbridgeupdater.exception.InvalidPanelURLException;
 import io.tofpu.speedbridgeupdater.executor.BukkitExecutor;
-import io.tofpu.speedbridgeupdater.ptero.PterodactylApp;
 import org.bukkit.Bukkit;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
-import java.util.concurrent.ExecutionException;
 
 public final class SpeedBridgeUpdater {
     private final @NotNull JavaPlugin plugin;
-    private PterodactylApp pterodactylApp;
+    private UpdateServiceController serviceController;
 
     public SpeedBridgeUpdater(final @NotNull JavaPlugin plugin) {
         this.plugin = plugin;
     }
 
-    public void load(final String serviceMode, final String panelUrl, final String apiKey, final String serverId) {
-        if (!panelUrl.contains("http")) {
+    public void load(final ServiceModeType serviceModeType, final String panelUrl, final String apiKey, final String serverId) {
+        if (serviceModeType == ServiceModeType.PTERODACTYL && !panelUrl.contains("http")) {
             Bukkit.getPluginManager().disablePlugin(plugin);
             try {
-                throw new InvalidPanelURL();
-            } catch (final InvalidPanelURL invalidPanelURL) {
-                throw new IllegalStateException(invalidPanelURL);
+                throw new InvalidPanelURLException(panelUrl);
+            } catch (final InvalidPanelURLException invalidPanelURLException) {
+                throw new IllegalStateException(invalidPanelURLException);
             }
         }
 
-        try {
-            BukkitExecutor.INSTANCE.submit(() -> {
-                try {
-                    this.pterodactylApp = new PterodactylApp(panelUrl, apiKey, serverId);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }).get();
-        } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
-        }
+        this.serviceController = new UpdateServiceController(serviceModeType, panelUrl, apiKey, serverId);
 
         DynamicClass.addParameters(plugin);
-        DynamicClass.addParameters(pterodactylApp);
+        DynamicClass.addParameters(serviceController);
         try {
             DynamicClass.alternativeScan(getClass().getClassLoader(), "io.tofpu" + ".speedbridgeupdater");
         } catch (IOException e) {

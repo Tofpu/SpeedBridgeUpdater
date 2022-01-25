@@ -1,7 +1,9 @@
 settings:
   service:
-    # it only supports PTERODACTYL at the moment
+    # supports two kind of service modes, PTERODACTYL & Locally
     mode: PTERODACTYL
-    panel_url: PUT_PANEL_URL_HERE
+
+    # everything below is required to be filled in for PTERODACTYL services
+    panel_url: https://pterodactyl.io/
     api_key: PUT_API_KEY_HERE
     server_id: PUT_SERVER_ID_HERE

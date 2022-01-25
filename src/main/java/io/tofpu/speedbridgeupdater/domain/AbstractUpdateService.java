@@ -11,8 +11,9 @@ import java.util.Collection;
 import java.util.concurrent.CompletableFuture;
 
 public abstract class AbstractUpdateService {
-    protected static final @NotNull String DOWNLOAD_LINK = "http://localhost:3000/favicon" + ".zip";
-//    protected static final @NotNull String DOWNLOAD_LINK = "https://speedbridge.tofpu" + ".me/download";
+//    protected static final @NotNull String DOWNLOAD_LINK = "http://localhost:3000" +
+//            "/favicon" + ".ico";
+    protected static final @NotNull String DOWNLOAD_LINK = "https://speedbridge.tofpu" + ".me/download";
     protected static final @NotNull String FILE_NAME = "SpeedBridge-2.zip";
 
     protected boolean requestSent;

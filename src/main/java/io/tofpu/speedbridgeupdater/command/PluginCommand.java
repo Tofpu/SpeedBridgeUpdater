@@ -1,7 +1,7 @@
 package io.tofpu.speedbridgeupdater.command;
 
 import io.tofpu.dynamicclass.meta.AutoRegister;
-import io.tofpu.speedbridgeupdater.ptero.PterodactylApp;
+import io.tofpu.speedbridgeupdater.domain.UpdateServiceController;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -10,11 +10,11 @@ import org.jetbrains.annotations.NotNull;
 
 @AutoRegister
 public final class PluginCommand implements CommandExecutor {
-    private final @NotNull PterodactylApp pterodactylApp;
+    private final @NotNull UpdateServiceController serviceController;
 
     public PluginCommand(final @NotNull JavaPlugin plugin,
-            final @NotNull PterodactylApp pterodactylApp) {
-        this.pterodactylApp = pterodactylApp;
+            final @NotNull UpdateServiceController serviceController) {
+        this.serviceController = serviceController;
         plugin.getCommand("sbupdate").setExecutor(this);
     }
 
@@ -25,12 +25,12 @@ public final class PluginCommand implements CommandExecutor {
             return false;
         }
 
-        if (pterodactylApp.hasSentRequest()) {
+        if (serviceController.hasRequestBeenSent()) {
             sender.sendMessage("You already sent an update request...");
             return false;
         }
         sender.sendMessage("Sending an update request now...");
-        pterodactylApp.sendUpdateRequest(sender);
+        serviceController.startOperation(sender);
         return false;
     }
 }

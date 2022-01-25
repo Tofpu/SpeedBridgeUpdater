@@ -1,11 +1,13 @@
 package io.tofpu.speedbridgeupdater.domain.extend;
 
+import com.google.common.io.Files;
 import io.tofpu.speedbridgeupdater.domain.AbstractUpdateService;
 import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Collection;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -33,8 +35,11 @@ public final class LocalService extends AbstractUpdateService {
 
         final AtomicBoolean moveResult = new AtomicBoolean(true);
         files.forEach(file -> {
-            if (!file.renameTo(new File(updateDirectory, file.getName()))) {
+            try {
+                Files.move(file, new File(updateDirectory, file.getName()));
+            } catch (IOException e) {
                 moveResult.set(false);
+                e.printStackTrace();
             }
         });
 
@@ -43,6 +48,7 @@ public final class LocalService extends AbstractUpdateService {
 
     @Override
     public void restartProcess() {
-        server.getConsoleSender().sendMessage("restart");
+        final CommandSender consoleSender = server.getConsoleSender();
+        server.dispatchCommand(consoleSender, "restart");
     }
 }

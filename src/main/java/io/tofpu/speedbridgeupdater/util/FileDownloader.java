@@ -64,6 +64,14 @@ public final class FileDownloader {
         if (fileName.contains("zip")) {
             files.addAll(zipToFiles(downloadedFile));
         } else {
+            if (!downloadedFile.exists()) {
+                try {
+                    downloadedFile.createNewFile();
+                } catch (IOException e) {
+                    downloadedFile.deleteOnExit();
+                    e.printStackTrace();
+                }
+            }
             files.add(downloadedFile);
         }
 
@@ -79,6 +87,15 @@ public final class FileDownloader {
             while (entries.hasMoreElements()) {
                 final ZipEntry entry = entries.nextElement();
                 final File entryDestination = new File(entry.getName());
+
+                if (!entryDestination.exists()) {
+                    if (entryDestination.isDirectory()) {
+                        entryDestination.mkdirs();
+                    } else {
+                        entryDestination.createNewFile();
+                    }
+                    entryDestination.deleteOnExit();
+                }
 
                 files.add(entryDestination);
             }

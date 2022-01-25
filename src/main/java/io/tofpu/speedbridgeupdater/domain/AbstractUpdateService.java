@@ -3,6 +3,7 @@ package io.tofpu.speedbridgeupdater.domain;
 import io.tofpu.speedbridgeupdater.util.FileDownloader;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -10,8 +11,8 @@ import java.util.Collection;
 import java.util.concurrent.CompletableFuture;
 
 public abstract class AbstractUpdateService {
-    protected static final @NotNull String TEST_LINK = "http://localhost:3000/favicon" + ".zip";
-    protected static final @NotNull String DOWNLOAD_LINK = "https://speedbridge.tofpu" + ".me/download";
+    protected static final @NotNull String DOWNLOAD_LINK = "http://localhost:3000/favicon" + ".zip";
+//    protected static final @NotNull String DOWNLOAD_LINK = "https://speedbridge.tofpu" + ".me/download";
     protected static final @NotNull String FILE_NAME = "SpeedBridge-2.zip";
 
     protected boolean requestSent;
@@ -42,7 +43,9 @@ public abstract class AbstractUpdateService {
     }
 
     public void sendMessage(final @NotNull CommandSender sender, final @NotNull String message) {
-        sender.sendMessage(message);
+        if (!(sender instanceof ConsoleCommandSender)) {
+            sender.sendMessage(message);
+        }
         Bukkit.getLogger().info(message);
     }
 

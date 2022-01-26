@@ -10,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
 
 public final class UpdateServiceController {
     private final @NotNull ServiceModeType serviceModeType;
-    private AbstractUpdateService abstractUpdateService;
+    private final @NotNull AbstractUpdateService abstractUpdateService;
 
     public UpdateServiceController(final @NotNull ServiceModeType serviceModeType, final String panelUrl, final String apiKey, final String serverId) {
         this.serviceModeType = serviceModeType;
@@ -19,9 +19,7 @@ public final class UpdateServiceController {
             this.abstractUpdateService = new LocalService(Bukkit.getServer());
         } else {
             // running the operation async due to the service blocking upon being invoked
-            BukkitExecutor.INSTANCE.submit(() -> {
-                this.abstractUpdateService = new PteroService(panelUrl, apiKey, serverId);
-            });
+            this.abstractUpdateService = new PteroService(panelUrl, apiKey, serverId);
         }
     }
 
